@@ -30,12 +30,12 @@ def load_prediction_models(model_file):
 # load model -------------------------------
 trained_knn_model = joblib.load("knn_model.pkl")
 
-buying_label = {'vhigh': 3, 'low': 0, 'med': 1, 'high': 2}
+buying_label = {'vhigh': 3, 'high': 2, 'med': 1, 'low': 0}
 maint_label = {'vhigh': 0, 'high': 1, 'med': 2, 'low': 3}
 doors_label = {'2': 0, '3': 1, '4': 3, '5more': 2}
 persons_label = {'1': 0, '2': 1, '3': 2, '4': 3, 'more': 3}
-lug_boot_label = {'small': 0, 'med': 1, 'big': 2, 'vbig': 3}
-safety_label = {'vhigh': 3, 'high': 2, 'med': 1, 'low': 0}
+lug_boot_label = {'small': 3, 'med': 2, 'big': 1, 'vbig': 0}
+safety_label = {'vhigh': 0, 'high': 1, 'med': 2, 'low': 3}
 class_label = {'Unacceptable': 0, 'Acceptable': 1, 'Good': 2, 'Very Good': 3}
 
 
@@ -64,7 +64,7 @@ def main():
                          tuple(maint_label.keys()))
     doors = st.selectbox("Select Number of Doors: ",
                          tuple(doors_label.keys()))
-    persons = st.number_input("Select Number of Persons: ", 2, 10)
+    persons = st.number_input("Select Number of Persons: ", 1, 10)
     lug_boot = st.selectbox("Select Luggage Boot: ",
                             tuple(lug_boot_label.keys()))
     safety = st.selectbox("Select Safety", tuple(safety_label.keys()))
@@ -86,6 +86,8 @@ def main():
     st.json(final_data)
 
     st.subheader("Data Encoding")
+
+    print("F data : ", final_data)
 
     sample_data = [k_buying, k_maint, k_doors,
                    persons, k_lug_boot, k_safety]

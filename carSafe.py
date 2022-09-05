@@ -31,6 +31,7 @@ cls = le.fit_transform(list(data["classes"]))
 
 predict = "class"
 
+print("Safety :", safety, " buying :", buying)
 
 X = list(zip(buying, maint, door, persons, lug_boot, safety))  # Features
 y = list(cls)
@@ -38,27 +39,16 @@ y = list(cls)
 x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(
     X, y, test_size=0.1)
 
-
 knn_model = KNeighborsClassifier(n_neighbors=7)  # Setting K Neighbour value
 
 knn_model.fit(x_train, y_train)
 
 print("Predict : ", x_test)
 predicted = knn_model.predict(x_test)  # setting prediction for out data set
-print("Predicted :", predicted)
+# print("Predicted :", predicted)
 
 acc = knn_model.score(x_test, y_test)  # Getting Accuracy of our model
 print("score : ", acc)
-# def classifier(model, X_train_res, X_test, y_train_res, y_test):
-#     clf = model
-#     clf.fit(x_train, y_train)
-#     y_pred = clf.predict(X_test)
-#     y_score = clf.fit(x_train, y_train)
-#     return model
-
-
-# knn1_model = classifier(
-#     KNeighborsClassifier(n_neighbors=9), x_train, x_test, y_train, y_test)
 
 # save model-------------------------------------------
 knn_new_model = open("knn_model.pkl", "wb")

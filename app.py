@@ -10,9 +10,6 @@ import joblib
 
 from PIL import Image
 
-# import filename constant-------------------
-from carSafe import MODEL_FILENAME, names
-
 
 @st.cache
 def load_dataset(dataset):
@@ -20,6 +17,8 @@ def load_dataset(dataset):
                'persons', 'lug_boot', 'safety', 'class']
     df = pd.read_csv(dataset, names=columns)
     return df
+
+# Returning model
 
 
 def load_prediction_models(model_file):
@@ -30,8 +29,9 @@ def load_prediction_models(model_file):
 # load model -------------------------------
 trained_knn_model = joblib.load("knn_model.pkl")
 
-buying_label = {'vhigh': 3, 'high': 2, 'med': 1, 'low': 0}
-maint_label = {'vhigh': 0, 'high': 1, 'med': 2, 'low': 3}
+# setting parameter valeus for our inputs
+buying_label = {'vhigh': 0, 'high': 1, 'med': 2, 'low': 3}
+maint_label = {'vhigh': 3, 'high': 2, 'med': 1, 'low': 0}
 doors_label = {'2': 0, '3': 1, '4': 3, '5more': 2}
 persons_label = {'1': 0, '2': 1, '3': 2, '4': 3, 'more': 3}
 lug_boot_label = {'small': 3, 'med': 2, 'big': 1, 'vbig': 0}
@@ -55,7 +55,7 @@ def main():
 
     st.title("Car Safe Project")
     image = Image.open('assets/index.png')
-    st.image(image, use_column_width=True)
+    st.image(image, use_column_width=True)  # setting Images
 
     st.subheader("Select below")
     buying = st.selectbox("Select Buying Level: ",
@@ -68,6 +68,7 @@ def main():
     lug_boot = st.selectbox("Select Luggage Boot: ",
                             tuple(lug_boot_label.keys()))
     safety = st.selectbox("Select Safety", tuple(safety_label.keys()))
+    # Getting integer value for user input
     k_buying = get_value(buying, buying_label)
     k_maint = get_value(maint, maint_label)
     k_doors = get_value(doors, doors_label)
@@ -93,31 +94,23 @@ def main():
                    persons, k_lug_boot, k_safety]
     st.write(sample_data)
 
-    prep_data = np.array(sample_data).reshape(1, -1)
+    prep_data = np.array(sample_data).reshape(1, -1)  # reshaping data
     print(" Prep DAta : ", prep_data)
     model_choices = st.selectbox(
         "Model Type", ['KNNClassifier'])
 
     if st.button('Evaluate'):
 
-        # using Logis regression start--------------
-        # pred = load_prediction_models("logit_model.pkl")
-        # y_pred = pred.predict(prep_data)
-        # print("logit :", y_pred)
-        # st.write(y_pred)
-        # final_result = get_key(y_pred, class_label)
-        # print("Final result : ", final_result)
-        # st.success(final_result)
-        # using logi ends---------------
-
         # knn start------------------
-        knn_pred = load_prediction_models("knn_model.pkl")
+        knn_pred = load_prediction_models(
+            "knn_model.pkl")  # returns our knn model
+        # Doing prediction for our user data
         y_pred = knn_pred.predict(prep_data)
         print("Knn 1 : ", y_pred)
         st.write(y_pred)
         final_result = get_key(y_pred, class_label)
         print("Final result : ", final_result)
-        st.success(final_result)
+        st.success(final_result)  # Printing Final Result
         # knn ends -----------------------
 
 

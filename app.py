@@ -11,7 +11,7 @@ import joblib
 from PIL import Image
 
 # import filename constant-------------------
-from carSafe import MODEL_FILENAME, getKnnData, names
+from carSafe import MODEL_FILENAME, names
 
 
 @st.cache
@@ -28,14 +28,14 @@ def load_prediction_models(model_file):
 
 
 # load model -------------------------------
-trained_knn_model = joblib.load("knn_modelData.pkl")
+trained_knn_model = joblib.load("knn_model.pkl")
 
-buying_label = {'vhigh': 0, 'low': 1, 'med': 2, 'high': 3}
-maint_label = {'vhigh': 0, 'low': 1, 'med': 2, 'high': 3}
-doors_label = {'2': 0, '3': 1, '5more': 2, '4': 3}
-persons_label = {'2': 0, '4': 1, 'more': 2}
-lug_boot_label = {'small': 0, 'big': 1, 'med': 2}
-safety_label = {'high': 0, 'med': 1, 'low': 2}
+buying_label = {'vhigh': 3, 'low': 0, 'med': 1, 'high': 2}
+maint_label = {'vhigh': 0, 'high': 1, 'med': 2, 'low': 3}
+doors_label = {'2': 0, '3': 1, '4': 3, '5more': 2}
+persons_label = {'1': 0, '2': 1, '3': 2, '4': 3, 'more': 3}
+lug_boot_label = {'small': 0, 'med': 1, 'big': 2, 'vbig': 3}
+safety_label = {'vhigh': 3, 'high': 2, 'med': 1, 'low': 0}
 class_label = {'Unacceptable': 0, 'Acceptable': 1, 'Good': 2, 'Very Good': 3}
 
 
@@ -109,7 +109,7 @@ def main():
         # using logi ends---------------
 
         # knn start------------------
-        knn_pred = load_prediction_models("knn1_modelData.pkl")
+        knn_pred = load_prediction_models("knn_model.pkl")
         y_pred = knn_pred.predict(prep_data)
         print("Knn 1 : ", y_pred)
         st.write(y_pred)
@@ -117,34 +117,6 @@ def main():
         print("Final result : ", final_result)
         st.success(final_result)
         # knn ends -----------------------
-
-        #         if model_choices == 'Logistic Regression':
-        #             pred = load_prediction_models("models/logit_model.pkl")
-        #             y_pred = pred.predict(prep_data)
-        #             st.write(y_pred)
-        #         if model_choices == 'Random Forest':
-        #             pred = load_prediction_models("models/rf_model.pkl")
-        #             y_pred = pred.predict(prep_data)
-        #             st.write(y_pred)
-        #         if model_choices == "MLP Classifier":
-        #             pred = load_prediction_models("models/nn_model.pkl")
-        #             y_pred = pred.predict(prep_data)
-        #             st.write(y_pred)
-        print("Evaluate")
-        # getKnnData(prep_data)
-        # # predict values------------------------
-        # predicted_value = trained_knn_model.predict(prep_data)
-        # print("!st ", predicted_value, names[predicted_value[0]])
-
-        # predd = load_prediction_models("knn_modelData.pkl")
-        # y_predd = predd.predict(prep_data)
-        # print("pred : ", y_predd)
-
-        # # y_pred = getKnnModel(prep_data)
-        # # print("y pred :", y_pred, class_label)
-        # final_result = get_key(y_predd, class_label)
-        # # print("Final result : ", final_result)
-        # st.success(final_result)
 
 
 if __name__ == '__main__':

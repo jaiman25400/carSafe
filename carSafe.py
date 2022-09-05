@@ -5,6 +5,13 @@ import pandas as pd
 import numpy as np
 from sklearn import linear_model, preprocessing
 from matplotlib import pyplot as plt
+from sklearn.linear_model import LogisticRegression
+
+# To store model ----------------------------
+import joblib
+
+# Filename in which sk learn model will be saved----------------------------------
+MODEL_FILENAME = 'knn_model'
 
 data = pd.read_csv("car.data")  # Read data using pandas
 
@@ -13,7 +20,7 @@ data = pd.read_csv("car.data")  # Read data using pandas
 # take the labels and convert them into appropriate integer values
 le = preprocessing.LabelEncoder()
 
-buying = le.fit_transform(list(data["buying"]))  # returns numpy array
+buying = le.fit_transform(list(data["buying"]))  # returns array
 maint = le.fit_transform(list(data["maint"]))
 door = le.fit_transform(list(data["door"]))
 persons = le.fit_transform(list(data["persons"]))
@@ -23,6 +30,7 @@ cls = le.fit_transform(list(data["classes"]))
 
 predict = "class"
 
+
 X = list(zip(buying, maint, door, persons, lug_boot, safety))  # Features
 y = list(cls)
 
@@ -30,22 +38,48 @@ x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(
     X, y, test_size=0.1)
 
 
-knn_model = KNeighborsClassifier(n_neighbors=9)  # Setting K Neighbour value
+knn_model = KNeighborsClassifier(n_neighbors=5)  # Setting K Neighbour value
 
 knn_model.fit(x_train, y_train)
+
+
+def classifier(model, X_train_res, X_test, y_train_res, y_test):
+    clf = model
+    clf.fit(x_train, y_train)
+    y_pred = clf.predict(X_test)
+    y_score = clf.fit(x_train, y_train)
+    return model
+
+
+lr_model = classifier(
+    LogisticRegression(), x_train, x_test, y_train, y_test)
+
+logit_model = open("logit_model.pkl", "wb")
+joblib.dump(lr_model, logit_model)
+logit_model.close()
+
+
+knn1_model = classifier(
+    KNeighborsClassifier(n_neighbors=5), x_train, x_test, y_train, y_test)
+
+# save model-------------------------------------------
+knn_new_model = open("knn1_modelData.pkl", "wb")
+joblib.dump(knn1_model, knn_new_model)
+knn_new_model.close()
+
 acc = knn_model.score(x_test, y_test)  # Getting Accuracy of our model
-print(acc)
-print("Predict : ", x_test)
-predicted = knn_model.predict(x_test)  # setting prediction for out data set
+print("score : ", acc)
+# print("Predict : ", x_test)
+# predicted = knn_model.predict(x_test)  # setting prediction for out data set
 # names for our classifier to classify our data
 names = ["unacceptable", "acceptable", "good", "Excellet"]
 
-for x in range(len(predicted)):
-    print("Predicted: ", names[predicted[x]], "Data: ",
-          x_test[x], "Actual: ", names[y_test[x]])
-    # returning distance and index of neighbours
-    # n = knn_model.kneighbors([x_test[x]], 9, True)
-    # print("N: ", n)
+# for x in range(len(predicted)):
+#     print("Predicted: ", names[predicted[x]], "Data: ",
+#           x_test[x], "Actual: ", names[y_test[x]])
+#     # returning distance and index of neighbours
+#     # n = knn_model.kneighbors([x_test[x]], 9, True)
+#     # print("N: ", n)
 
 
 def getKnnData(data):

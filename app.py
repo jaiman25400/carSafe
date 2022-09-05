@@ -10,7 +10,8 @@ import joblib
 
 from PIL import Image
 
-from carSafe import getKnnData
+# import filename constant-------------------
+from carSafe import MODEL_FILENAME, getKnnData, names
 
 
 @st.cache
@@ -25,6 +26,9 @@ def load_prediction_models(model_file):
     load_model = joblib.load(open(os.path.join(model_file), "rb"))
     return load_model
 
+
+# load model -------------------------------
+trained_knn_model = joblib.load("knn_modelData.pkl")
 
 buying_label = {'vhigh': 0, 'low': 1, 'med': 2, 'high': 3}
 maint_label = {'vhigh': 0, 'low': 1, 'med': 2, 'high': 3}
@@ -78,7 +82,6 @@ def main():
         "lug_boot": lug_boot,
         "safety": safety,
     }
-    print("Final Data :", final_data, k_buying, buying_label)
     st.subheader("options selected")
     st.json(final_data)
 
@@ -94,6 +97,27 @@ def main():
         "Model Type", ['KNNClassifier'])
 
     if st.button('Evaluate'):
+
+        # using Logis regression start--------------
+        # pred = load_prediction_models("logit_model.pkl")
+        # y_pred = pred.predict(prep_data)
+        # print("logit :", y_pred)
+        # st.write(y_pred)
+        # final_result = get_key(y_pred, class_label)
+        # print("Final result : ", final_result)
+        # st.success(final_result)
+        # using logi ends---------------
+
+        # knn start------------------
+        knn_pred = load_prediction_models("knn1_modelData.pkl")
+        y_pred = knn_pred.predict(prep_data)
+        print("Knn 1 : ", y_pred)
+        st.write(y_pred)
+        final_result = get_key(y_pred, class_label)
+        print("Final result : ", final_result)
+        st.success(final_result)
+        # knn ends -----------------------
+
         #         if model_choices == 'Logistic Regression':
         #             pred = load_prediction_models("models/logit_model.pkl")
         #             y_pred = pred.predict(prep_data)
@@ -107,12 +131,19 @@ def main():
         #             y_pred = pred.predict(prep_data)
         #             st.write(y_pred)
         print("Evaluate")
-        getKnnData(prep_data)
+        # getKnnData(prep_data)
+        # # predict values------------------------
+        # predicted_value = trained_knn_model.predict(prep_data)
+        # print("!st ", predicted_value, names[predicted_value[0]])
 
-        # y_pred = getKnnModel(prep_data)
-        # print("y pred :", y_pred, class_label)
-        # final_result = get_key(y_pred, class_label)
-        # print("Final result : ", final_result)
+        # predd = load_prediction_models("knn_modelData.pkl")
+        # y_predd = predd.predict(prep_data)
+        # print("pred : ", y_predd)
+
+        # # y_pred = getKnnModel(prep_data)
+        # # print("y pred :", y_pred, class_label)
+        # final_result = get_key(y_predd, class_label)
+        # # print("Final result : ", final_result)
         # st.success(final_result)
 
 

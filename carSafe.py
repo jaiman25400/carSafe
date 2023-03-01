@@ -7,7 +7,7 @@ from sklearn import linear_model, preprocessing
 from matplotlib import pyplot as plt
 from sklearn.linear_model import LogisticRegression
 
-# To store model ----------------------------
+# To store model Jaiman----------------------------
 import joblib
 
 # Filename in which sk learn model will be saved----------------------------------
